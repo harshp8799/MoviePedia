@@ -103,6 +103,9 @@ class FakeAudit(AuditLogPort):
     async def record(self, **kwargs) -> None:
         self.records.append(kwargs)
 
+    async def list(self, *, limit: int = 50):
+        return list(reversed(self.records))[:limit]
+
 
 @pytest.fixture
 def svc():

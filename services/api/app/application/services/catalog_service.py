@@ -117,6 +117,9 @@ class CatalogService:
     async def list_catalog(self, content_type: str | None = None) -> list[dict[str, Any]]:
         return await self._content.list_all(content_type=content_type)
 
+    async def list_audit_logs(self, limit: int = 50) -> list[dict[str, Any]]:
+        return await self._audit.list(limit=limit)
+
     # ---- seasons & episodes ----------------------------------------------
     async def _require_series(self, series_id: str) -> dict[str, Any]:
         series = await self._content.get_by_id(series_id)

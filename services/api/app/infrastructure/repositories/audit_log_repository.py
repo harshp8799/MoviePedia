@@ -2,7 +2,10 @@
 
 from __future__ import annotations
 
+from typing import Any
+
 from google.cloud import firestore
+from google.cloud.firestore_v1 import Query
 
 from app.domain.repositories.ports import AuditLogPort
 from app.infrastructure.repositories.base import FirestoreRepository
@@ -33,3 +36,11 @@ class FirestoreAuditLogAdapter(FirestoreRepository, AuditLogPort):
                 "at": _TS,
             }
         )
+
+    async def list(self, *, limit: int = 50) -> list[dict[str, Any]]:
+        query = (
+            self._db.collection(_COLLECTION)
+            .order_by("at", direction=Query.DESCENDING)
+            .limit(limit)
+        )
+        return [self._to_dict(d) for d in query.stream()]

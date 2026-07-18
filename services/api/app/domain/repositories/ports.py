@@ -99,3 +99,6 @@ class AuditLogPort(ABC):
     @abstractmethod
     async def record(self, *, actor_uid: str, action: str, entity_type: str, entity_id: str,
                      before: dict | None = None, after: dict | None = None) -> None: ...
+
+    @abstractmethod
+    async def list(self, *, limit: int = 50) -> list[dict[str, Any]]: ...

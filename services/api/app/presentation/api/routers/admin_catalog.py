@@ -87,6 +87,15 @@ async def list_catalog(
     return {"items": await svc.list_catalog(content_type=type)}
 
 
+@router.get("/audit-logs")
+async def list_audit_logs(
+    user: Admin,
+    svc: Service,
+    limit: Annotated[int, Query(ge=1, le=200)] = 50,
+) -> dict:
+    return {"items": await svc.list_audit_logs(limit)}
+
+
 # ---- seasons & episodes ---------------------------------------------------
 @router.post("/series/{series_id}/seasons", status_code=201)
 async def add_season(series_id: str, body: SeasonCreate, user: Editor, svc: Service) -> dict:
