@@ -69,3 +69,40 @@ def test_catalog_service_publish_flow_end_to_end():
     cid, published, listed = asyncio.run(scenario())
     assert published["visibility"] == "published"
     assert any(item["id"] == cid for item in listed)
+
+
+def test_public_catalog_reads_published_only():
+    from app.application.services.public_catalog_service import PublicCatalogService
+    from app.domain.value_objects.enums import ContentType, Visibility
+    from app.infrastructure.repositories.content_repository import FirestoreContentRepository
+    from app.infrastructure.repositories.genre_repository import FirestoreGenreRepository
+
+    content = FirestoreContentRepository()
+    svc = PublicCatalogService(content, FirestoreGenreRepository())
+
+    async def scenario():
+        pub = await content.create(
+            {
+                "type": "movie",
+                "slug": "pub-movie-6",
+                "title": "Pub Movie",
+                "visibility": "published",
+                "genres": ["drama"],
+                "searchTokens": ["pub"],
+                "popularity": 10,
+            }
+        )
+        await content.set_visibility(pub, Visibility.PUBLISHED.value)
+        await content.create(
+            {"type": "movie", "slug": "draft-movie-6", "title": "Draft", "visibility": "draft"}
+        )
+        listed = await svc.list_content(ContentType.MOVIE, limit=50)
+        detail = await svc.get_detail("pub-movie-6")
+        return listed, detail
+
+    listed, detail = asyncio.run(scenario())
+    slugs = [i["slug"] for i in listed["items"]]
+    assert "pub-movie-6" in slugs
+    assert "draft-movie-6" not in slugs
+    assert detail["slug"] == "pub-movie-6"
+    assert "searchTokens" not in detail

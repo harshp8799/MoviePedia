@@ -73,6 +73,44 @@ class FakeContent(ContentRepository):
         self._n += 1
         return f"e{self._n}"
 
+    async def get_published_by_slug(self, slug: str):
+        d = await self.get_by_slug(slug)
+        return d if d and d.get("visibility") == "published" else None
+
+    async def query_published(
+        self, *, content_type=None, genre=None, sort="popularity", cursor=None, limit=24
+    ):
+        items = [
+            {**d, "id": k}
+            for k, d in self.docs.items()
+            if d.get("visibility") == "published"
+            and (not content_type or d.get("type") == content_type)
+            and (not genre or genre in d.get("genres", []))
+        ]
+        return items[:limit], None
+
+    async def search_published(self, token, *, content_type=None, limit=24):
+        return [
+            {**d, "id": k}
+            for k, d in self.docs.items()
+            if d.get("visibility") == "published" and token in (d.get("searchTokens") or [])
+        ][:limit]
+
+    async def similar_published(self, genres, *, exclude_id, limit=12):
+        return [
+            {**d, "id": k}
+            for k, d in self.docs.items()
+            if k != exclude_id
+            and d.get("visibility") == "published"
+            and set(genres) & set(d.get("genres", []))
+        ][:limit]
+
+    async def list_seasons(self, series_id):
+        return []
+
+    async def list_episodes(self, series_id, season_id):
+        return []
+
 
 class FakeGenre(GenreRepository):
     def __init__(self) -> None:

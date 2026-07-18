@@ -45,6 +45,37 @@ class ContentRepository(ABC):
     @abstractmethod
     async def add_episode(self, series_id: str, season_id: str, data: dict[str, Any]) -> str: ...
 
+    # ---- public reads (published only) -----------------------------------
+    @abstractmethod
+    async def get_published_by_slug(self, slug: str) -> dict[str, Any] | None: ...
+
+    @abstractmethod
+    async def query_published(
+        self,
+        *,
+        content_type: str | None = None,
+        genre: str | None = None,
+        sort: str = "popularity",
+        cursor: str | None = None,
+        limit: int = 24,
+    ) -> tuple[list[dict[str, Any]], str | None]: ...
+
+    @abstractmethod
+    async def search_published(
+        self, token: str, *, content_type: str | None = None, limit: int = 24
+    ) -> list[dict[str, Any]]: ...
+
+    @abstractmethod
+    async def similar_published(
+        self, genres: list[str], *, exclude_id: str, limit: int = 12
+    ) -> list[dict[str, Any]]: ...
+
+    @abstractmethod
+    async def list_seasons(self, series_id: str) -> list[dict[str, Any]]: ...
+
+    @abstractmethod
+    async def list_episodes(self, series_id: str, season_id: str) -> list[dict[str, Any]]: ...
+
 
 class GenreRepository(ABC):
     """Reference-data collection `genres` keyed by slug."""

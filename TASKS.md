@@ -102,7 +102,25 @@ Legend for phases from the master plan. One phase at a time; stop & report at ea
 - [ ] Commit + push Part B (pending your go-ahead)
 - Note: interactive browser flow (button clicks) needs manual verification; API contract + auth chain are proven
 
-## Phase 6 — Public Web MVP ⏳ (next: homepage, catalog, search, details, watchlist)
+## Phase 6 — Public Web MVP 🚧
+
+### Part A — Public catalog read API ✅
+
+- [x] ContentRepository public reads: query_published (filters + cursor pagination), get_published_by_slug, search_published, similar_published, list_seasons/episodes
+- [x] `PublicCatalogService`: home rails (trending/popular/recent), listings, detail (+seasons/episodes/similar), search, genres — strips internal fields
+- [x] Public routes (no auth): `/home`, `/genres`, `/movies`, `/series`, `/movies/{slug}`, `/series/{slug}`, `/search`
+- [x] Added composite index (visibility, popularity)
+- [x] Tests: 3 shaping unit + fakes + 3 emulator integration; ruff clean
+- [x] Live HTTP smoke: home rails, listings, detail+seasons, search, draft→404 all correct
+- [ ] Commit + push Part A
+
+### Part B — Public web pages ⏳
+
+- [ ] Homepage rails, movies/series listings + filters, search page
+- [ ] Detail pages (SSR + SEO/OG metadata), loading/empty/error states, responsive
+- [ ] Public auth (sign up / Google), watchlist + viewing history (needs user-library API)
+
+## Phase 7 — Android MVP ⏳
 
 ## Phase 7 — Android MVP ⏳
 
