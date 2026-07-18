@@ -90,6 +90,38 @@ class GenreRepository(ABC):
     async def delete(self, genre_id: str) -> None: ...
 
 
+class UserLibraryRepository(ABC):
+    """Per-user private data: watchlist/favorites, recently-viewed history, watch progress.
+
+    All methods are scoped by `uid` (from the verified token) — a user can only ever touch
+    their own data (owner-scoped by construction).
+    """
+
+    @abstractmethod
+    async def add_item(self, uid: str, list_type: str, content_id: str, summary: dict) -> None: ...
+
+    @abstractmethod
+    async def remove_item(self, uid: str, list_type: str, content_id: str) -> None: ...
+
+    @abstractmethod
+    async def list_items(self, uid: str, list_type: str) -> list[dict[str, Any]]: ...
+
+    @abstractmethod
+    async def has_item(self, uid: str, list_type: str, content_id: str) -> bool: ...
+
+    @abstractmethod
+    async def upsert_progress(self, uid: str, content_id: str, data: dict) -> None: ...
+
+    @abstractmethod
+    async def list_progress(self, uid: str, *, incomplete_only: bool = True) -> list[dict]: ...
+
+    @abstractmethod
+    async def record_view(self, uid: str, content_id: str, summary: dict) -> None: ...
+
+    @abstractmethod
+    async def list_history(self, uid: str, *, limit: int = 50) -> list[dict[str, Any]]: ...
+
+
 class SearchPort(ABC):
     """Search abstraction — Firestore-native now, swappable later (ADR-005)."""
 

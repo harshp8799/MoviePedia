@@ -1,3 +1,4 @@
+import DetailActions from './DetailActions';
 import Rail from './Rail';
 
 // Shared detail view for movies & series. For series, renders seasons + episodes.
@@ -32,6 +33,7 @@ export default function DetailView({ item }) {
           <p className="mt-4 max-w-2xl text-muted">
             {item.fullDescription || item.shortDescription}
           </p>
+          <DetailActions contentId={item.id} />
         </div>
       </div>
 

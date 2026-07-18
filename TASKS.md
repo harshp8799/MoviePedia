@@ -102,7 +102,7 @@ Legend for phases from the master plan. One phase at a time; stop & report at ea
 - [ ] Commit + push Part B (pending your go-ahead)
 - Note: interactive browser flow (button clicks) needs manual verification; API contract + auth chain are proven
 
-## Phase 6 — Public Web MVP 🚧
+## Phase 6 — Public Web MVP ✅
 
 ### Part A — Public catalog read API ✅
 
@@ -123,10 +123,15 @@ Legend for phases from the master plan. One phase at a time; stop & report at ea
 - [x] Validated: build compiles, web lint clean, **live SSR render** (home rails + seed titles + `<title>`/og:title + series episodes + unknown-slug→404)
 - [ ] Commit + push Part B
 
-### Part C — Public auth + user library ⏳ (next)
+### Part C — Public auth + user library ✅
 
-- [ ] User-library backend API (watchlist/favorites/history/progress) + tests
-- [ ] Public auth UI (sign up / sign in / Google), watchlist + history pages
+- [x] UserLibraryRepository port + Firestore adapter (owner-scoped subcollections)
+- [x] UserLibraryService: watchlist/favorites, recently-viewed history, watch progress (continue-watching); denormalized summaries
+- [x] Routes (auth): `/library/{watchlist|favorites}`, `/history`, `/progress` + PUT
+- [x] Public auth UI: `/login` (sign in / sign up / Google), auth-aware Nav
+- [x] Library + History pages, DetailActions (watchlist/favorite toggle + record view) on detail
+- [x] Tests: 7 library (fakes) + 1 emulator integration; ruff clean
+- [x] Validated: web build compiles, lint clean; full library e2e via token (add/list/progress/history/remove; unauth→401)
 
 ## Phase 7 — Android MVP ⏳
 

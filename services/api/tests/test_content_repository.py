@@ -106,3 +106,31 @@ def test_public_catalog_reads_published_only():
     assert "draft-movie-6" not in slugs
     assert detail["slug"] == "pub-movie-6"
     assert "searchTokens" not in detail
+
+
+def test_user_library_flow_end_to_end():
+    from app.application.services.user_library_service import UserLibraryService
+    from app.infrastructure.repositories.content_repository import FirestoreContentRepository
+    from app.infrastructure.repositories.user_library_repository import (
+        FirestoreUserLibraryRepository,
+    )
+
+    content = FirestoreContentRepository()
+    svc = UserLibraryService(content, FirestoreUserLibraryRepository())
+
+    async def scenario():
+        cid = await content.create(
+            {"type": "movie", "slug": "lib-e2e", "title": "Lib E2E", "visibility": "published"}
+        )
+        await svc.add_to_list("userX", "watchlist", cid)
+        watchlist = await svc.get_list("userX", "watchlist")
+        await svc.set_progress("userX", cid, 10, 100)
+        continue_watching = await svc.get_continue_watching("userX")
+        await svc.remove_from_list("userX", "watchlist", cid)
+        after = await svc.get_list("userX", "watchlist")
+        return cid, watchlist, continue_watching, after
+
+    cid, watchlist, continue_watching, after = asyncio.run(scenario())
+    assert any(i["contentId"] == cid for i in watchlist["items"])
+    assert any(i["contentId"] == cid for i in continue_watching["items"])
+    assert after["items"] == []
