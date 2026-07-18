@@ -154,6 +154,17 @@ Legend for phases from the master plan. One phase at a time; stop & report at ea
 - [x] Validated: backend 40 passed / 4 skipped, ruff clean; web build + lint clean; 11 rules tests
 - Deferred to Phase 10 / follow-up: App Check, Redis-backed rate limiter, isolated API venv, mobile on-device + jest-expo/Detox tests, major dep upgrades (Expo 57 / Next 16)
 
-## Phase 10 — Deployment ⏳
+## Phase 10 — Deployment 🚧 (prep complete; cloud provisioning needs your credentials)
+
+- [x] API production container: `services/api/Dockerfile` (gunicorn + uvicorn workers, non-root, `$PORT`) + `.dockerignore`
+- [x] Runtime/dev requirements split (`requirements.txt` / `requirements-dev.txt`)
+- [x] CI pipeline: api (lint+test), rules (Firestore+Storage emulator), web (format+lint+build), mobile (Metro bundle)
+- [x] Deploy workflows: staging (auto) + production (manual, environment-gated) for Firebase rules/indexes
+- [x] Hosting configs: `render.yaml` (free API), `apps/web/vercel.json`, `apps/mobile/eas.json`
+- [x] `docs/DEPLOYMENT.md` runbook (provisioning, per-component deploy, monitoring, rollback, secrets checklist)
+- [x] Validated: Docker image builds + runs (gunicorn serving /health, security headers); all CI/deploy YAML + JSON parse
+- [ ] **(you)** create staging/prod Firebase projects, set GitHub secrets, provision Render/Vercel/EAS, enable Blaze + budget alerts
+
+## Phase 11 — Post-MVP ⏳
 
 ## Phase 11 — Post-MVP ⏳

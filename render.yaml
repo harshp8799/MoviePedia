@@ -1,0 +1,30 @@
+# Render Blueprint for the API — a $0 way to host the FastAPI container (no billing account
+# required, unlike Cloud Run). The free web service spins down when idle. Cloud Run is the
+# scalable alternative (needs Blaze). See docs/DEPLOYMENT.md.
+
+services:
+  - type: web
+    name: moviepedia-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./services/api/Dockerfile
+    dockerContext: ./services/api
+    healthCheckPath: /api/v1/health
+    autoDeploy: true
+    envVars:
+      - key: APP_ENV
+        value: staging
+      - key: USE_FIREBASE_EMULATOR
+        value: 'false'
+      - key: LOG_FORMAT
+        value: json
+      # Set these in the Render dashboard (Environment):
+      - key: FIREBASE_ADMIN_PROJECT_ID
+        sync: false
+      - key: FIREBASE_STORAGE_BUCKET
+        sync: false
+      - key: API_CORS_ORIGINS
+        sync: false
+      # Upload the service-account JSON as a Render Secret File and point ADC at it:
+      - key: GOOGLE_APPLICATION_CREDENTIALS
+        sync: false

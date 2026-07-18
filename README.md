@@ -33,8 +33,8 @@ docs/            architecture dossier + ADRs
 # 1. Install JS workspace deps
 npm install
 
-# 2. Backend deps (uses the repo .venv)
-.venv/bin/pip install -r services/api/requirements.txt
+# 2. Backend deps (uses the repo .venv). Use requirements-dev.txt for tests/lint.
+.venv/bin/pip install -r services/api/requirements-dev.txt
 
 # 3. Environment
 cp .env.example .env        # fill in / keep emulator defaults

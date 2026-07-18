@@ -17,11 +17,28 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install -r requirements.txt
+      - run: pip install -r requirements-dev.txt
       - name: Lint (ruff)
         run: ruff check app tests
       - name: Test (pytest)
         run: pytest
+
+  rules:
+    name: Firestore + Storage rules
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - run: npm ci
+      - name: Rules tests (emulator)
+        run: npm run test:rules
 
   web:
     name: Web + packages (JS)
@@ -35,5 +52,21 @@ jobs:
       - run: npm ci
       - name: Format check
         run: npm run format:check
+      - name: Lint web
+        run: npm run lint --workspace apps/web
       - name: Build web
         run: npm run build:web
+
+  mobile:
+    name: Mobile bundle check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - name: Metro bundle (expo export)
+        working-directory: apps/mobile
+        run: npx expo export --platform android --output-dir /tmp/export

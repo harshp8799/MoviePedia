@@ -1,0 +1,30 @@
+name: Deploy Staging (Firebase rules & indexes)
+
+# App hosting (Vercel web, Render/Cloud Run API) auto-deploy from git. This workflow owns the
+# piece CI must control: deploying Firestore/Storage rules + indexes to the STAGING project.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  firebase:
+    name: Deploy rules & indexes → staging
+    runs-on: ubuntu-latest
+    environment: staging # configure protection/secrets in repo Settings → Environments
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Deploy Firestore & Storage rules + indexes
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT: ${{ vars.FIREBASE_STAGING_PROJECT }}
+        run: |
+          npx firebase-tools@15 deploy \
+            --only firestore:rules,firestore:indexes,storage \
+            --project "$PROJECT" \
+            --token "$FIREBASE_TOKEN" \
+            --non-interactive

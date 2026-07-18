@@ -1,0 +1,28 @@
+name: Deploy Production (Firebase rules & indexes)
+
+# Manual only. The `production` environment should have a required reviewer (manual approval)
+# configured in repo Settings → Environments → production.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  firebase:
+    name: Deploy rules & indexes → production
+    runs-on: ubuntu-latest
+    environment: production # add required reviewers here to gate production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Deploy Firestore & Storage rules + indexes
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+          PROJECT: ${{ vars.FIREBASE_PROD_PROJECT }}
+        run: |
+          npx firebase-tools@15 deploy \
+            --only firestore:rules,firestore:indexes,storage \
+            --project "$PROJECT" \
+            --token "$FIREBASE_TOKEN" \
+            --non-interactive
