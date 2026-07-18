@@ -11,7 +11,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger
-from app.presentation.api.routers import health
+from app.presentation.api.errors import register_exception_handlers
+from app.presentation.api.middleware.request_context import RequestContextMiddleware
+from app.presentation.api.routers import admin, health, users
 
 API_V1_PREFIX = "/api/v1"
 
@@ -27,6 +29,7 @@ def create_app() -> FastAPI:
         description="Movie Pedia backend — modular monolith, Clean Architecture.",
     )
 
+    app.add_middleware(RequestContextMiddleware)
     app.add_middleware(
         CORSMiddleware,
         allow_origins=settings.cors_origins,
@@ -35,7 +38,11 @@ def create_app() -> FastAPI:
         allow_headers=["*"],
     )
 
+    register_exception_handlers(app)
+
     app.include_router(health.router, prefix=API_V1_PREFIX)
+    app.include_router(users.router, prefix=API_V1_PREFIX)
+    app.include_router(admin.router, prefix=API_V1_PREFIX)
 
     logger.info("app_started", extra={"env": settings.app_env, "prefix": API_V1_PREFIX})
     return app

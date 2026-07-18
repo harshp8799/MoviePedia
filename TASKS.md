@@ -65,12 +65,17 @@ Legend for phases from the master plan. One phase at a time; stop & report at ea
 - [x] Validated: `npm run test:rules` (7/7) · seed populates emulator · API `/ready` → `firebase: ok` · pytest 2/2 · ruff clean
 - [ ] Commit + push (pending your go-ahead)
 
-## Phase 4 — Backend Foundation ⏳
+## Phase 4 — Backend Foundation ✅
 
-- [ ] App factory, config, error handling, logging, health/ready
-- [ ] Firebase token verification + RBAC deps
-- [ ] Base repository ports + Firestore adapters
-- [ ] API response conventions + test framework
+- [x] App factory, config, health/ready (from Phase 2/3) + request-id logging middleware
+- [x] Consistent error envelope `{error:{code,message,details}}` via exception handlers (AppError, validation, unhandled)
+- [x] Firebase token verification (`AuthPort` → `FirebaseAuthAdapter`, check_revoked)
+- [x] RBAC dependencies: `get_current_user` + `require_role(*roles)`, deny-by-default; role read only from verified claims
+- [x] RBAC probe routes: `/users/me`, `/admin/ping` (admin), `/admin/editorial` (admin+editor)
+- [x] Base repository (`FirestoreRepository`) + `FirestoreContentRepository` (get_by_slug, create, list_published)
+- [x] Response schemas: error envelope, cursor `Page`, `CurrentUser`
+- [x] Validated: 11 auth/RBAC/health tests pass · repo adapter test passes vs live emulator · ruff clean
+- [ ] Commit + push (pending your go-ahead)
 
 ## Phase 5 — Catalog & Admin MVP ⏳
 

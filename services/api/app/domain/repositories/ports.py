@@ -20,6 +20,11 @@ class ContentRepository(ABC):
     @abstractmethod
     async def create(self, data: dict[str, Any]) -> str: ...
 
+    @abstractmethod
+    async def list_published(
+        self, *, content_type: str | None = None, limit: int = 24
+    ) -> list[dict[str, Any]]: ...
+
 
 class SearchPort(ABC):
     """Search abstraction — Firestore-native now, swappable later (ADR-005)."""
