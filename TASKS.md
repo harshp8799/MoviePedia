@@ -144,7 +144,15 @@ Legend for phases from the master plan. One phase at a time; stop & report at ea
 
 ## Phase 8 — Authorized Media Playback ⏳ (deferred pipeline; Mux)
 
-## Phase 9 — Hardening ⏳
+## Phase 9 — Hardening ✅
+
+- [x] Security headers middleware (nosniff, DENY, no-referrer) + per-IP rate limiting (429) with tests
+- [x] Storage security-rules tests (public read, deny writes, originals hidden) — `test:rules` now runs Firestore + Storage (11/11 pass)
+- [x] Security review + threat summary (STRIDE-lite) → `docs/SECURITY.md`
+- [x] Dependency audit: patched Next.js to 14.2.35 (runtime advisory, non-breaking); remaining findings are Expo/firebase-tools build-tooling transitive — scheduled for Phase 10 upgrade
+- [x] Cost & scaling review → `docs/COSTS.md`
+- [x] Validated: backend 40 passed / 4 skipped, ruff clean; web build + lint clean; 11 rules tests
+- Deferred to Phase 10 / follow-up: App Check, Redis-backed rate limiter, isolated API venv, mobile on-device + jest-expo/Detox tests, major dep upgrades (Expo 57 / Next 16)
 
 ## Phase 10 — Deployment ⏳
 

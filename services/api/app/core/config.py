@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     firebase_auth_emulator_host: str = "localhost:9099"
     firebase_storage_emulator_host: str = "localhost:9199"
 
+    # Rate limiting (per-IP, per-minute)
+    rate_limit_per_minute: int = 120
+
     # Logging
     log_level: str = "INFO"
     log_format: str = "json"  # json | console

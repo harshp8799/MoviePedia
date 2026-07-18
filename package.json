@@ -19,12 +19,12 @@
     "seed": ".venv/bin/python scripts/seed.py",
     "claims": ".venv/bin/python scripts/set_admin_claims.py",
     "reset": ".venv/bin/python scripts/reset_dev_data.py",
-    "test:rules": "firebase emulators:exec --only firestore --project movie-pedia-local \"node --test 'firebase/tests/*.test.mjs'\""
+    "test:rules": "firebase emulators:exec --only firestore,storage --project movie-pedia-local \"node --test 'firebase/tests/*.test.mjs'\""
   },
   "devDependencies": {
     "@firebase/rules-unit-testing": "^5.0.1",
     "eslint": "^8.57.1",
-    "eslint-config-next": "14.2.18",
+    "eslint-config-next": "^14.2.30",
     "firebase": "^12.16.0",
     "firebase-tools": "^15.24.0",
     "prettier": "^3.4.1"
