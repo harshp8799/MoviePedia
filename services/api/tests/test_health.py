@@ -14,7 +14,10 @@ def test_health_ok():
     assert body["service"] == "movie-pedia-api"
 
 
-def test_ready_ok():
+def test_ready_responds():
+    # Readiness returns "ready" when Firestore is reachable, "degraded" otherwise.
+    # Unit tests run without the emulator, so accept either — it must never error.
     res = client.get("/api/v1/ready")
     assert res.status_code == 200
-    assert res.json()["status"] == "ready"
+    assert res.json()["status"] in {"ready", "degraded"}
+    assert "firebase" in res.json()["checks"]

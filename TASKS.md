@@ -51,15 +51,19 @@ Legend for phases from the master plan. One phase at a time; stop & report at ea
 - [x] `firebase/` config: rules stubs, indexes, emulator config, per-env `.firebaserc`
 - [x] `scripts/` seed / reset-dev-data / set-admin-claims (safe stubs)
 - [x] `.github/workflows/ci.yml` (lint+test+build gate)
-- [ ] Initial commit (pending — commit only on your say-so)
+- [x] Initial commit + pushed to origin (github.com/harshp8799/MoviePedia)
 - [x] PHASE 2 COMPLETION REPORT
 
-## Phase 3 — Firebase Foundation ⏳
+## Phase 3 — Firebase Foundation ✅
 
-- [ ] Per-env project strategy, auth providers, Firestore collections
-- [ ] Firestore indexes + security rules + Storage rules
-- [ ] Emulator config, Admin integration, seed data
-- [ ] Rules tests (emulator)
+- [x] Per-env project strategy (`.firebaserc`), auth providers, Firestore collection design (`docs/FIRESTORE.md`)
+- [x] Firestore composite indexes (9) + hardened security rules + Storage rules
+- [x] Emulator config, Firebase Admin SDK integration (`services/api/.../infrastructure/firebase/admin.py`), readiness wired
+- [x] Real seed data (`scripts/seed.py`): 7 genres, 3 movies + 1 draft, series+season+2 episodes, 3 demo accounts w/ roles
+- [x] set-admin-claims + reset-dev-data scripts (emulator-guarded)
+- [x] Rules tests (emulator): **7/7 pass** — draft hidden, catalog writes denied, owner-only user data
+- [x] Validated: `npm run test:rules` (7/7) · seed populates emulator · API `/ready` → `firebase: ok` · pytest 2/2 · ruff clean
+- [ ] Commit + push (pending your go-ahead)
 
 ## Phase 4 — Backend Foundation ⏳
 

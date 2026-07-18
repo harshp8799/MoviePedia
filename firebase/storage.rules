@@ -1,18 +1,24 @@
 rules_version = '2';
 
-// Movie Pedia Storage rules. Uploads happen via signed URLs issued by the backend after
-// validation (ADR-006); direct client writes are denied. Public assets (posters/backdrops) are
-// world-readable. Full rules land in Phase 3.
+// ============================================================================
+// Movie Pedia — Cloud Storage rules.
+// Uploads happen via signed URLs issued by the backend AFTER validation
+// (type/size) — see ADR-006. Direct client writes are denied everywhere.
+// Public images (posters/backdrops) are world-readable; original videos and
+// any non-public path are served only through backend-signed URLs.
+// ============================================================================
+
 service firebase.storage {
   match /b/{bucket}/o {
 
-    // Public images: read-only for everyone; no direct client writes.
+    // Public, published imagery — read-only for everyone, never client-writable.
     match /public/{allPaths=**} {
       allow read: if true;
       allow write: if false;
     }
 
-    // Everything else denied by default (served via backend-signed URLs).
+    // Everything else (originals, drafts, processing artifacts): no client access.
+    // Reads happen via short-TTL signed URLs minted by the backend.
     match /{allPaths=**} {
       allow read, write: if false;
     }

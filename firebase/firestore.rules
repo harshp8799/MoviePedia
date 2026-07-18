@@ -1,42 +1,88 @@
 rules_version = '2';
 
-// Movie Pedia Firestore security rules — the SECOND wall (default-deny). FastAPI is the primary
-// authority for writes (ADR-003). Full rules + tests land in Phase 3. This baseline enforces:
-//   - public read only of PUBLISHED content
-//   - all content writes rejected (server-only via Admin SDK, which bypasses rules)
-//   - per-user data readable/writable only by its owner
+// ============================================================================
+// Movie Pedia — Firestore security rules (the SECOND wall; default-deny).
+// FastAPI (Admin SDK) is the primary authority for writes — and the Admin SDK
+// BYPASSES these rules entirely. So client-facing rules only ever GRANT reads
+// of public/owned data and DENY all client writes to catalog/internal data.
+// (ADR-003.) Tested in firebase/tests/firestore.rules.test.mjs.
+// ============================================================================
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    // ---- helpers ----------------------------------------------------------
     function isSignedIn() {
       return request.auth != null;
     }
+    function isOwner(uid) {
+      return isSignedIn() && request.auth.uid == uid;
+    }
+    function isPublished(data) {
+      return data.visibility == 'published';
+    }
+    function parentContentPublished(seriesId) {
+      return isPublished(
+        get(/databases/$(database)/documents/content/$(seriesId)).data
+      );
+    }
 
-    // Public catalog: read only published items; writes go through the backend (Admin SDK).
+    // ---- public catalog: movies + series ----------------------------------
+    // Read only PUBLISHED items. All client writes denied (server-only).
     match /content/{contentId} {
-      allow read: if resource.data.visibility == 'published';
+      allow read: if isPublished(resource.data);
       allow write: if false;
 
-      match /{sub=**} {
-        // Seasons/episodes inherit: readable if their parent series is published is enforced at
-        // the app/query layer in Phase 3; for now deny direct writes.
-        allow read: if true;
+      // Seasons/episodes readable only when their parent series is published.
+      match /seasons/{seasonId} {
+        allow read: if parentContentPublished(contentId);
         allow write: if false;
+
+        match /episodes/{episodeId} {
+          allow read: if parentContentPublished(contentId);
+          allow write: if false;
+        }
       }
     }
 
-    // Per-user data: owner-only.
-    match /user_libraries/{uid}/{document=**} {
-      allow read, write: if isSignedIn() && request.auth.uid == uid;
+    // ---- public reference data (drive homepage/browse) --------------------
+    match /genres/{genreId} {
+      allow read: if true;
+      allow write: if false;
     }
-    match /watch_progress/{uid}/{document=**} {
-      allow read, write: if isSignedIn() && request.auth.uid == uid;
+    match /homepage_sections/{sectionId} {
+      allow read: if true;
+      allow write: if false;
     }
-    match /viewing_history/{uid}/{document=**} {
-      allow read, write: if isSignedIn() && request.auth.uid == uid;
+    match /collections/{collectionId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /people/{personId} {
+      allow read: if true;
+      allow write: if false;
     }
 
-    // Everything else: deny by default.
+    // ---- user profile: readable by owner; writes go through the backend ----
+    match /users/{uid} {
+      allow read: if isOwner(uid);
+      allow write: if false;
+    }
+
+    // ---- per-user private data: owner-only read AND write -----------------
+    match /user_libraries/{uid}/{document=**} {
+      allow read, write: if isOwner(uid);
+    }
+    match /watch_progress/{uid}/{document=**} {
+      allow read, write: if isOwner(uid);
+    }
+    match /viewing_history/{uid}/{document=**} {
+      allow read, write: if isOwner(uid);
+    }
+
+    // ---- internal / admin-only (server-side via Admin SDK) ----------------
+    // media_assets, audit_logs, processing_jobs, app_config, notifications:
+    // never exposed to clients. Denied here; the Admin SDK bypasses rules.
     match /{document=**} {
       allow read, write: if false;
     }
