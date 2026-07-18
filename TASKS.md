@@ -133,11 +133,16 @@ Legend for phases from the master plan. One phase at a time; stop & report at ea
 - [x] Tests: 7 library (fakes) + 1 emulator integration; ruff clean
 - [x] Validated: web build compiles, lint clean; full library e2e via token (add/list/progress/history/remove; unauth→401)
 
-## Phase 7 — Android MVP ⏳
+## Phase 7 — Android MVP ✅
 
-## Phase 7 — Android MVP ⏳
+- [x] Firebase auth (email/password) w/ Auth emulator (10.0.2.2 host mapping), shared api-client with token injection
+- [x] Auth + Query providers; Expo Router tabs (Home, Search, Library, Profile) + content detail route
+- [x] Home rails, Search, Detail (seasons/episodes + similar + add-to-watchlist + record view), Library (watchlist/history)
+- [x] Profile: sign in / sign up / sign out + push-notification foundation (permission + token via expo-notifications)
+- [x] Validated: **Metro bundle succeeds** (`expo export` → 1124 modules → Hermes bundle); all imports resolve
+- Known limitation: on-device render + jest-expo/Detox tests need an Android emulator (deferred to Phase 9); Google sign-in on mobile deferred (needs expo-auth-session)
 
-## Phase 8 — Authorized Media Playback ⏳ (deferred pipeline)
+## Phase 8 — Authorized Media Playback ⏳ (deferred pipeline; Mux)
 
 ## Phase 9 — Hardening ⏳
 

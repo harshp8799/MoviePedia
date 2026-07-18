@@ -17,7 +17,7 @@
       "bundleIdentifier": "com.moviepedia.app",
       "supportsTablet": true
     },
-    "plugins": ["expo-router", "expo-secure-store"],
+    "plugins": ["expo-router", "expo-secure-store", "expo-notifications"],
     "extra": {
       "apiBaseUrl": "http://localhost:8000/api/v1"
     }
