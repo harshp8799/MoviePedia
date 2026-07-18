@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.venv/
+__pycache__/
+*.py[cod]
+.pnp.*
+
+# Env & secrets — NEVER commit
+.env
+.env.*
+!.env.example
+**/serviceAccount*.json
+**/*firebase-adminsdk*.json
+*.keystore
+*.jks
+
+# Build output
+.next/
+out/
+dist/
+build/
+.expo/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+coverage/
+htmlcov/
+.turbo/
+
+# Firebase emulator
+firebase/**/*.log
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+**/.firebase/
+emulator-data/
+
+# OS / editor
+.DS_Store
+*.log
+.vscode/
+.idea/
+.tokensave/

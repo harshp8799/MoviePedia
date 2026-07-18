@@ -1,0 +1,44 @@
+rules_version = '2';
+
+// Movie Pedia Firestore security rules — the SECOND wall (default-deny). FastAPI is the primary
+// authority for writes (ADR-003). Full rules + tests land in Phase 3. This baseline enforces:
+//   - public read only of PUBLISHED content
+//   - all content writes rejected (server-only via Admin SDK, which bypasses rules)
+//   - per-user data readable/writable only by its owner
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Public catalog: read only published items; writes go through the backend (Admin SDK).
+    match /content/{contentId} {
+      allow read: if resource.data.visibility == 'published';
+      allow write: if false;
+
+      match /{sub=**} {
+        // Seasons/episodes inherit: readable if their parent series is published is enforced at
+        // the app/query layer in Phase 3; for now deny direct writes.
+        allow read: if true;
+        allow write: if false;
+      }
+    }
+
+    // Per-user data: owner-only.
+    match /user_libraries/{uid}/{document=**} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
+    }
+    match /watch_progress/{uid}/{document=**} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
+    }
+    match /viewing_history/{uid}/{document=**} {
+      allow read, write: if isSignedIn() && request.auth.uid == uid;
+    }
+
+    // Everything else: deny by default.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

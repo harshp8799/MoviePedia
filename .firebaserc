@@ -1,0 +1,9 @@
+{
+  "projects": {
+    "default": "movie-pedia-local",
+    "local": "movie-pedia-local",
+    "dev": "movie-pedia-dev",
+    "staging": "movie-pedia-staging",
+    "production": "movie-pedia-prod"
+  }
+}

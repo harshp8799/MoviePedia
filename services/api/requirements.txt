@@ -1,0 +1,13 @@
+# Runtime
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+pydantic==2.10.3
+pydantic-settings==2.6.1
+python-json-logger==2.0.7
+firebase-admin==6.6.0
+
+# Dev / test
+pytest==8.3.4
+httpx==0.28.1
+ruff==0.8.2
+black==24.10.0
