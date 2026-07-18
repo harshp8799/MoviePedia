@@ -77,7 +77,24 @@ Legend for phases from the master plan. One phase at a time; stop & report at ea
 - [x] Validated: 11 auth/RBAC/health tests pass · repo adapter test passes vs live emulator · ruff clean
 - [ ] Commit + push (pending your go-ahead)
 
-## Phase 5 — Catalog & Admin MVP ⏳
+## Phase 5 — Catalog & Admin MVP 🚧
+
+### Part A — Backend catalog/admin API ✅
+
+- [x] Domain rules (`content_rules`): slug, search tokens, publish state machine, doc assembly
+- [x] Value objects: ContentType / Visibility / Role enums
+- [x] Ports: ContentRepository (get/create/update/set_visibility/list/seasons/episodes) + GenreRepository
+- [x] Firestore adapters: content, genre, audit-log, storage (signed URLs; emulator fallback)
+- [x] `CatalogService` use-cases (genres, movies, series, seasons, episodes, publish/archive, upload-url) — audits every mutation
+- [x] Admin routers: genres CRUD, movie/series create, content update, publish/archive/unpublish, seasons/episodes, upload-url, catalog list
+- [x] Validation via Pydantic request schemas; RBAC (editor+admin; genre delete admin-only)
+- [x] Tests: 6 domain-rule + 9 admin-catalog (fakes) + 2 emulator integration — all pass; ruff clean
+- [ ] Commit + push Part A (pending your go-ahead)
+
+### Part B — Admin web UI ⏳
+
+- [ ] Protected `/admin` layout + auth guard (Firebase web SDK) in apps/web
+- [ ] Catalog table, movie/series forms, publish workflow controls, upload UI, audit-log viewer
 
 ## Phase 6 — Public Web MVP ⏳
 

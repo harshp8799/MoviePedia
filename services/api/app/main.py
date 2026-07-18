@@ -13,7 +13,7 @@ from app.core.config import get_settings
 from app.core.logging import configure_logging, get_logger
 from app.presentation.api.errors import register_exception_handlers
 from app.presentation.api.middleware.request_context import RequestContextMiddleware
-from app.presentation.api.routers import admin, health, users
+from app.presentation.api.routers import admin, admin_catalog, health, users
 
 API_V1_PREFIX = "/api/v1"
 
@@ -43,6 +43,7 @@ def create_app() -> FastAPI:
     app.include_router(health.router, prefix=API_V1_PREFIX)
     app.include_router(users.router, prefix=API_V1_PREFIX)
     app.include_router(admin.router, prefix=API_V1_PREFIX)
+    app.include_router(admin_catalog.router, prefix=API_V1_PREFIX)
 
     logger.info("app_started", extra={"env": settings.app_env, "prefix": API_V1_PREFIX})
     return app

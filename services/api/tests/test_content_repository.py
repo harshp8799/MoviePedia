@@ -49,3 +49,23 @@ def test_create_get_and_list_published():
     assert cid
     assert got is not None and got["slug"] == "phase4-smoke"
     assert any(item["slug"] == "phase4-smoke" for item in published)
+
+
+def test_catalog_service_publish_flow_end_to_end():
+    from app.domain.value_objects.enums import ContentType, Visibility
+    from app.presentation.api.dependencies.catalog import get_catalog_service
+
+    svc = get_catalog_service()
+
+    async def scenario():
+        created = await svc.create_content(
+            "actor1", ContentType.MOVIE, {"title": "E2E Publish Test", "genres": ["drama"]}
+        )
+        cid = created["id"]
+        published = await svc.change_visibility("actor1", cid, Visibility.PUBLISHED)
+        listed = await svc.list_catalog(content_type="movie")
+        return cid, published, listed
+
+    cid, published, listed = asyncio.run(scenario())
+    assert published["visibility"] == "published"
+    assert any(item["id"] == cid for item in listed)

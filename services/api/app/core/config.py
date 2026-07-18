@@ -24,6 +24,7 @@ class Settings(BaseSettings):
 
     # Firebase / emulator
     firebase_admin_project_id: str = "movie-pedia-local"
+    firebase_storage_bucket: str = ""
     google_application_credentials: str = ""
     use_firebase_emulator: bool = True
     firestore_emulator_host: str = "localhost:8080"

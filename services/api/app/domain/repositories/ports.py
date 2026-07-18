@@ -15,15 +15,48 @@ class ContentRepository(ABC):
     """Reads/writes the single `content` collection (movies + series)."""
 
     @abstractmethod
+    async def get_by_id(self, content_id: str) -> dict[str, Any] | None: ...
+
+    @abstractmethod
     async def get_by_slug(self, slug: str) -> dict[str, Any] | None: ...
 
     @abstractmethod
     async def create(self, data: dict[str, Any]) -> str: ...
 
     @abstractmethod
+    async def update(self, content_id: str, patch: dict[str, Any]) -> None: ...
+
+    @abstractmethod
+    async def set_visibility(self, content_id: str, visibility: str) -> None: ...
+
+    @abstractmethod
     async def list_published(
         self, *, content_type: str | None = None, limit: int = 24
     ) -> list[dict[str, Any]]: ...
+
+    @abstractmethod
+    async def list_all(
+        self, *, content_type: str | None = None, limit: int = 50
+    ) -> list[dict[str, Any]]: ...
+
+    @abstractmethod
+    async def add_season(self, series_id: str, data: dict[str, Any]) -> str: ...
+
+    @abstractmethod
+    async def add_episode(self, series_id: str, season_id: str, data: dict[str, Any]) -> str: ...
+
+
+class GenreRepository(ABC):
+    """Reference-data collection `genres` keyed by slug."""
+
+    @abstractmethod
+    async def upsert(self, genre_id: str, data: dict[str, Any]) -> None: ...
+
+    @abstractmethod
+    async def list(self) -> list[dict[str, Any]]: ...
+
+    @abstractmethod
+    async def delete(self, genre_id: str) -> None: ...
 
 
 class SearchPort(ABC):
