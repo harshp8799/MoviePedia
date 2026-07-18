@@ -114,11 +114,19 @@ Legend for phases from the master plan. One phase at a time; stop & report at ea
 - [x] Live HTTP smoke: home rails, listings, detail+seasons, search, draft→404 all correct
 - [ ] Commit + push Part A
 
-### Part B — Public web pages ⏳
+### Part B — Public web pages ✅
 
-- [ ] Homepage rails, movies/series listings + filters, search page
-- [ ] Detail pages (SSR + SEO/OG metadata), loading/empty/error states, responsive
-- [ ] Public auth (sign up / Google), watchlist + viewing history (needs user-library API)
+- [x] `(public)` route group + Nav (with search) + shared components (ContentCard, Rail, Listing, DetailView)
+- [x] Homepage rails (trending/popular/recent), movies/series listings with sort + genre filters
+- [x] Detail pages (movie + series with seasons/episodes + similar), SSR + dynamic SEO/OG metadata, 404 handling
+- [x] Search page (no-JS form), empty/error states, responsive grid, reads public API server-side
+- [x] Validated: build compiles, web lint clean, **live SSR render** (home rails + seed titles + `<title>`/og:title + series episodes + unknown-slug→404)
+- [ ] Commit + push Part B
+
+### Part C — Public auth + user library ⏳ (next)
+
+- [ ] User-library backend API (watchlist/favorites/history/progress) + tests
+- [ ] Public auth UI (sign up / sign in / Google), watchlist + history pages
 
 ## Phase 7 — Android MVP ⏳
 
